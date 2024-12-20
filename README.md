@@ -23,7 +23,15 @@ Leverage libraries like django-rest-framework-json-schema or drf-flex-fields for
 
 13. Output Formats (JSON, XML, etc.)
  - Customize output by overriding renderers in the view.
+```python
+from rest_framework.renderers import JSONRenderer, XMLRenderer
 
+class CustomViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    renderer_classes = [JSONRenderer, XMLRenderer]
+
+```
 14. Integrating Serializers with ViewSets and QuerySets
 - Use multiple serializers for different actions:
 ```python
