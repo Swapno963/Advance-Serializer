@@ -20,7 +20,18 @@ Use specific fields for relationships:
 Leverage libraries like django-rest-framework-json-schema or drf-flex-fields for JSON schema validation and dynamic field selection.
 12. Custom Fields
  - Create custom fields for non-standard data types or formats.
+```python
+class CommaSeparatedListField(serializers.Field):
+    def to_representation(self, value):
+        return ",".join(value)
 
+    def to_internal_value(self, data):
+        return data.split(",")
+
+class CustomSerializer(serializers.Serializer):
+    tags = CommaSeparatedListField()
+
+```
 13. Output Formats (JSON, XML, etc.)
  - Customize output by overriding renderers in the view.
 ```python
