@@ -1,4 +1,4 @@
-# Advance-Serializer
+# Advance-Serializers
 1. Work with nested searilizer
 2. Work with nested selrilizer
 3. Serializer Inheritance
