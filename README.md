@@ -8,6 +8,7 @@
 
 ## Pending
 3. Serializer Inheritance
+  - Basic Inheritance
 4. Custom to_representation Method
 5. Custom create and update Methods
 6. Dynamic Fields Serializer

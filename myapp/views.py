@@ -1,14 +1,20 @@
 from django.shortcuts import get_object_or_404
-from myapp.serializers import ProductSerializer,OrderSerializer
+from myapp.serializers import * 
 from myapp.models import Product,Order
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 
 @api_view(['GET'])
-def product_list(request):
+def product_list_basic(request):
     products = Product.objects.all()
     serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def product_list_detail(request):
+    products = Product.objects.all()
+    serializer = DetailedUserSerializer(products, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])

@@ -2,16 +2,16 @@ from rest_framework import serializers
 from .models import Product, Order, OrderItem
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class BasicProductSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField(max_length=100)
+
     class Meta:
         model = Product
-        fields = (
+        fields = [
             'id',
             'name',
-            'price',
-            'stock',
-        )
-
+        ]
     def validate_price(self, value):
         if value <= 0:
             raise serializers.ValidationError(
@@ -25,12 +25,25 @@ class ProductSerializer(serializers.ModelSerializer):
                 "stock must be greater than 0."
             )
         return value
+
+
+class ProductSerializer( BasicProductSerializer):
+    class Meta:
+        model = Product
+        fields = BasicProductSerializer.Meta.fields
+
+
     
 
+class DetailedUserSerializer(BasicProductSerializer):
+    extra_field = serializers.SerializerMethodField()
 
+    class Meta(BasicProductSerializer.Meta):
+        fields = BasicProductSerializer.Meta.fields + ['extra_field', 'price','stock'] 
 
-
-
+    def get_extra_field(self, obj):
+        return f"Extra info for {obj.name}"
+    
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name')
