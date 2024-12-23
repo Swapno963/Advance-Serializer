@@ -11,7 +11,7 @@
 10. Using SerializerMethodField
 14. Integrating Serializers with ViewSets and QuerySets
 - Use multiple serializers for different actions:
-```python
+```python 966502145047
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
 
