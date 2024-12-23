@@ -2,14 +2,37 @@
 ## Done
 1. Work with nested searilizer
 2. Work with nested selrilizer
+3. Serializer Inheritance
+  - Basic Inheritance
+
+4. Custom to_representation and to_internal_value Method
 7. Field-Level Custom Validation
 9. Serializer Relations
 10. Using SerializerMethodField
+14. Integrating Serializers with ViewSets and QuerySets
+- Use multiple serializers for different actions:
+```python
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ListProductSerializer
+        if self.action == 'retrieve':
+            return DetailedProductSerializer
+        return DefaultProductSerializer
+```
+
+
+
+
+
+
+
+
 
 ## Pending
-3. Serializer Inheritance
-  - Basic Inheritance
-4. Custom to_representation Method
+
 5. Custom create and update Methods
 6. Dynamic Fields Serializer
 
@@ -21,7 +44,6 @@ Use specific fields for relationships:
  - StringRelatedField
 
 11. Polymorphic Serializers
-12. Validation Using Third-Party Libraries
 Leverage libraries like django-rest-framework-json-schema or drf-flex-fields for JSON schema validation and dynamic field selection.
 12. Custom Fields
  - Create custom fields for non-standard data types or formats.
@@ -47,17 +69,4 @@ class CustomViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     renderer_classes = [JSONRenderer, XMLRenderer]
 
-```
-14. Integrating Serializers with ViewSets and QuerySets
-- Use multiple serializers for different actions:
-```python
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ListProductSerializer
-        if self.action == 'retrieve':
-            return DetailedProductSerializer
-        return DefaultProductSerializer
 ```

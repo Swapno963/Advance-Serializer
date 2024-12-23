@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, Order, OrderItem
+from .models import *
 
 
 class BasicProductSerializer(serializers.ModelSerializer):
@@ -80,3 +80,65 @@ class OrderSerializer(serializers.ModelSerializer):
             'items',
             'total_price',
         )
+
+
+class CommaSeparatedListField(serializers.Field):
+    def to_representation(self, value):
+        # Convert the list to a comma-separated string
+        return " ".join(value)
+
+    def to_internal_value(self, data):
+        # Convert the comma-separated string to a list
+        return data.split(",")
+    # pass
+
+
+class ArticleSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=200)
+    content = serializers.CharField()
+    tags = CommaSeparatedListField()
+
+
+    def to_representation(self, obj):
+        data = super().to_representation(obj)
+        data["custom_field"] = "Custom Value"
+        return data
+
+
+
+class BaseProductSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    description = serializers.CharField()
+
+class PhysicalProductSerializer(BaseProductSerializer):
+    weight = serializers.FloatField()
+    dimensions = serializers.CharField(max_length=100)
+
+class DigitalProductSerializer(BaseProductSerializer):
+    file_size = serializers.FloatField()
+    download_url = serializers.URLField()
+
+class ProductPolymorphicSerializer(serializers.Serializer):
+    type = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
+
+    def get_type(self, obj):
+        if isinstance(obj, PhysicalProduct):
+            return "physical"
+        elif isinstance(obj, DigitalProduct):
+            return "digital"
+        return "unknown"
+
+    def get_product(self, obj):
+        if isinstance(obj, PhysicalProduct):
+            return PhysicalProductSerializer(obj).data
+        elif isinstance(obj, DigitalProduct):
+            return DigitalProductSerializer(obj).data
+        return {}
+
+    def to_representation(self, obj):
+        """
+        Customize the representation to include the type field at the root level.
+        """
+        data = super().to_representation(obj)
+        return {"type": data["type"], "product": data["product"]}

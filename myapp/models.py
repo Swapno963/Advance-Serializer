@@ -61,3 +61,32 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in Order {self.order.order_id}"
+    
+
+class Article(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    tags = models.TextField()  # Store tags as a comma-separated string
+
+    def save(self, *args, **kwargs):
+        # Ensure tags are always stored as a comma-separated string
+        if isinstance(self.tags, list):
+            self.tags = ",".join(self.tags)
+        super().save(*args, **kwargs)
+
+
+
+class BaseProduct(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+
+    class Meta:
+        abstract = True
+
+class PhysicalProduct(BaseProduct):
+    weight = models.FloatField()
+    dimensions = models.CharField(max_length=100)
+
+class DigitalProduct(BaseProduct):
+    file_size = models.FloatField()
+    download_url = models.URLField()
