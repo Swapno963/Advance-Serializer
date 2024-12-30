@@ -142,3 +142,20 @@ class ProductPolymorphicSerializer(serializers.Serializer):
         """
         data = super().to_representation(obj)
         return {"type": data["type"], "product": data["product"]}
+
+
+# For filtering all the fields for a model
+class DynamicFieldSerializer(serializers.ModelSerializer):
+    field_choices = serializers.SerializerMethodField()  
+
+    class Meta:
+        model = DynamicField
+        fields = ['id', 'field_type', 'name','is_required','is_unique','is_readonly','field_choices']
+
+    def get_field_choices(self, obj):
+        """
+        Split the `field_choices` string into a list.
+        """
+        if obj.field_choices:
+            return obj.field_choices.split(",")  
+        return []  
